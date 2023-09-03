@@ -23,7 +23,6 @@ class _SignInPageState extends State<SignInPage> {
           create: (context) => AuthCubit(),
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
-              // TODO: implement listener
               if (state is AuthError) {
                 showDialog(
                     context: context,
@@ -32,11 +31,11 @@ class _SignInPageState extends State<SignInPage> {
                           content: Text(state.errorMessage.error.toString()),
                         ));
               } else if (state is AuthLoading) {
-                print("loading");
               } else if (state is AuthLoginSuccess) {
-                // print(state.dataLogin);
+                // save data to local
+                context.read<AuthCubit>().saveUserToLocal(state.dataLogin);
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => HomePage(),
+                  builder: (context) => const HomePage(),
                 ));
               }
             },
@@ -80,7 +79,8 @@ class _SignInPageState extends State<SignInPage> {
     return ElevatedButton(
       onPressed: () {
         final _requestData =
-            LoginRequest(email: _userName.text, password: _password.text);
+            // LoginRequest(email: _userName.text, password: _password.text);
+            LoginRequest(email: "eve.holt@reqres.in", password: "cityslicka");
         context.read<AuthCubit>().signInUser(_requestData);
       },
       child: const Text("Login"),
